@@ -1,12 +1,14 @@
 const express = require('express');
+let cors = require('cors')
 require('dotenv').config();
 const db = require('./src/db/connection');
 
 const PORT = process.env.PORT
 const app = express()
 app.use(express.json())
+app.use(cors())
 
-db();
+db();   
 
 // import all routes
 const clientRoutes = require('./src/routes/client');
