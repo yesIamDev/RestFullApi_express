@@ -5,13 +5,13 @@ const Account = require('../models/Acount')
 
 // create
 
-router.post("/retrait/id", (req, res) => {
+router.post("/:id", (req, res) => {
   const clientId = req.params;
   const { amount, isUSD } = req.body;
   const newRetrait = new Retrait({ amount, clientId, isUSD });
 
-  Account.find().then((acount) => {
-    array.forEach((acount) => {
+  Account.find().then((acounts) => {
+    acounts.forEach((acount) => {
       if (acount.clientId == clientId) {
         if (acount.amount < amount) {
           res.json({
@@ -23,7 +23,7 @@ router.post("/retrait/id", (req, res) => {
       }
     });
   });
-  Retrait
+  newRetrait
     .save()
     .then(() => {
       res.json({ message: "Operation effectuee avec succes" });

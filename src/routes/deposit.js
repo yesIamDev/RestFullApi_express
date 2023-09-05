@@ -13,12 +13,12 @@ router.post("/:id", (req, res) => {
 
   newDeposit
     .save()
-    .then((newDeposit)=>{
-      clientId = newDeposit.id;
+    .then(()=>{
       Account
-        .findOne('clientId',clientId)
+        .findOne({ clientId: `${clientId}`})
         .then((account)=>{
           account.amount = account.amount + amount;
+          account.save();
           res.json(account);
         })
         .catch(()=>{
