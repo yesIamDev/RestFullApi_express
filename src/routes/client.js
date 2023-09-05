@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Acount = require('../models/Acount');
-const generateCode = require('../utils/generator');
-const Client = require('../models/Client')
+const Acount = require("../models/Acount");
+const generateCode = require("../utils/generator");
+const Client = require("../models/Client");
 
 // create
 router.post("/create", (req, res) => {
@@ -26,11 +26,10 @@ router.post("/create", (req, res) => {
 });
 
 // read all
-router.get("/", (req,res) => {
-  Client
-    .find()
+router.get("/", (req, res) => {
+  Client.find()
     .then((clients) => {
-       res.json(clients)
+      res.json(clients);
     })
     .catch((err) => {
       res.json({ error: "Error fetching clients" });
@@ -41,8 +40,7 @@ router.get("/", (req,res) => {
 router.put("/:id", (req, res) => {
   const { id } = req.params;
   const { name, postname, nationalite } = req.body;
-  Client
-    .findByIdAndUpdate(id, { name, postname, nationalite }, { new: true })
+  Client.findByIdAndUpdate(id, { name, postname, nationalite }, { new: true })
     .then((client) => {
       res.json(client);
     })
@@ -54,10 +52,15 @@ router.put("/:id", (req, res) => {
 //delete
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-  Client
-    .findByIdAndRemove(id)
+  Client.findByIdAndRemove(id)
     .then(() => {
-      res.json({ message: "Client deleted successfuly" });
+      Acount.findOneAndDelete({ clientId: `${id}` })
+        .then(() => {
+          res.json({ message: "Client deleted successfuly" });
+        })
+        .catch((err) => {
+          res.json(err);
+        });
     })
     .catch((err) => {
       res.json({ error: "Error deleting Client" });
