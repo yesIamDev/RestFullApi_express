@@ -1,16 +1,19 @@
 const mongoose = require('mongoose');
+const {Schema} = mongoose;
 
-const acountSchema = new mongoose.Schema({
-    clientId: {
-        type: String,
-        required: true
-    },
-    code : String,
-    amount: {
+const acountSchema = Schema({
+    client: { type: Schema.Types.ObjectId, ref:'Client'},
+    acountNumber: String,
+    usdSold: {
         type: Number,
-        required: true,
+        default: 0
+    },
+    fcSold: {
+        type: Number,
         default: 0
     }
 })
 
-module.exports = mongoose.model('Acount',acountSchema);
+const Acount = mongoose.model('Acount', acountSchema);
+
+module.exports = Acount;

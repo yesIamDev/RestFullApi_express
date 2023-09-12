@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const Acount = require("../models/Acount");
 const generateCode = require("../utils/generator");
@@ -6,18 +7,25 @@ const Client = require("../models/Client");
 
 // create
 router.post("/create", (req, res) => {
-  const { name, postname, nationalite } = req.body;
-  const newClient = new Client({ name, postname, nationalite });
+  const { name, postname, age, nationalite } = req.body;
+  const newClient = new Client({
+    _id: new mongoose.Types.ObjectId(),
+    name: name,
+    postname: postname,
+    age: age,
+    nationalite: nationalite,
+  });
 
   newClient
     .save()
-    .then((newClient) => {
-      const clientId = newClient.id;
+    .then(() => {
       const code = generateCode(10);
-      const newAcount = new Acount({ clientId, code });
+      const newAcount = new Acount({
+        client: newClient._id,
+        acountNumber: code,
+      });
 
       newAcount.save();
-
       res.json(newClient);
     })
     .catch((err) => {

@@ -1,19 +1,9 @@
 const mongoose = require('mongoose');
+const {Schema} = mongoose;
 
-const depositSchema = new mongoose.Schema({
-    amount: {
-        type: Number,
-        required: true,
-    },
-    clientId: {
-        type: String,
-        required: true
-    },
-    isUSD: {
-        type:Boolean,
-        default:true,
-        required:true
-    }
+const depositSchema = Schema({
+   acount: { type: Schema.Types.ObjectId, ref:'Acount' },
+   amount: Number
 })
 
 module.exports = mongoose.model('Deposit', depositSchema);

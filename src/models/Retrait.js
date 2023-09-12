@@ -1,19 +1,9 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const retraitSchema = new mongoose.Schema({
-    amount: {
-        type: Number,
-        required: true,
-    },
-    clientId: {
-        type: String,
-        required: true,
-    },
-    isUSD: {
-        type:Boolean,
-        default:true,
-        required:true
-    }
-})
+const retraitSchema = Schema({
+  acount: { type: Schema.Types.ObjectId, ref: "Acount" },
+  amount: Number,
+});
 
-module.exports = mongoose.model('Retrait', retraitSchema);
+module.exports = mongoose.model("Retrait", retraitSchema);

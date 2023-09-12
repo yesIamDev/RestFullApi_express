@@ -6,7 +6,9 @@ const db = require('./src/db/connection');
 const PORT = process.env.PORT
 const app = express()
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin:'*'
+}))
 
 db();   
 
