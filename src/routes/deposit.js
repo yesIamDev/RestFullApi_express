@@ -9,30 +9,32 @@ router.post("/:id", (req, res) => {
   const Id = req.params;
   let clientId = Id.id;
   const { amount, isUSD } = req.body;
-  const newDeposit = new Deposit({ amount, clientId, isUSD });
+  const newDeposit = new Deposit({ amount });
 
-  newDeposit
-    .save()
-    .then(()=>{
-      Account
-        .findOne({ clientId: `${clientId}`})
-        .then((account)=>{
-          account.amount = account.amount + amount;
-          account.save();
-          res.json(account);
-        })
-        .catch(()=>{
-          res.json({message:"Account dosn't exist! Error"});
-        })
-    })
+  newDeposit.save().then(() => {
+    Account.findOne({ client: `${clientId}` })
+      .then((acount) => {
+        if (isUSD) {
+          acount.usdSold = acount.usdSold + amount;
+          acount.save();
+          res.json(acount);
+        } else {
+          acount.fcSold = acount.fcSold + amount;
+          acount.save();
+          res.json(acount);
+        }
+      })
+      .catch(() => {
+        res.json({ message: "Account dosn't exist! Error" });
+      });
+  });
 });
 
 // read all
-router.get("/", (req,res) => {
-  Deposit
-    .find()
+router.get("/", (req, res) => {
+  Deposit.find()
     .then((deposits) => {
-       res.json(deposits)
+      res.json(deposits);
     })
     .catch((err) => {
       res.json({ error: "Error fetching deposits" });
