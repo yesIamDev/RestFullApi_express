@@ -36,12 +36,20 @@ router.post("/create", (req, res) => {
 // read all
 router.get("/", (req, res) => {
   Client.find()
+    .sort({ name: -1 })
     .then((clients) => {
       res.json(clients);
     })
     .catch((err) => {
       res.json({ error: "Error fetching clients" });
     });
+});
+
+// get one by id
+router.get("/:id", (req, res) => {
+  Client.findOne({ _id: `${req.params.id}` }).then((client) => {
+    res.json(client);
+  });
 });
 
 //update
@@ -62,7 +70,7 @@ router.delete("/:id", (req, res) => {
   const { id } = req.params;
   Client.findByIdAndRemove(id)
     .then(() => {
-      Acount.findOneAndDelete({ clientId: `${id}` })
+      Acount.findOneAndDelete({ client: `${id}` })
         .then(() => {
           res.json({ message: "Client deleted successfuly" });
         })
